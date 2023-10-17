@@ -1,7 +1,9 @@
 ﻿//C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke
 
-// returned hours to main to quit the games. untested
+// next: cause pass game to quit when hours reach 3 & make sure hours update in main console
 //***Main
+using System.Globalization;
+
 int totalHours = 0;
 int wheelHours = 0;
 
@@ -45,14 +47,100 @@ static int MenuLogic(string x, ref int wheelHours){
 //Method responsible for password game
 static int PasswordGame(){
     string check = "1";
+    string check2 = "1";
     int passHours = 0;
+    char[] blanks = new char[7];
 
-    while(check == "1"){
+    while(check == "1" && passHours < 3){
+        Console.Clear();
+        string pass = RandomPass();
+        check2 = "1";
 
+        int charCount = pass.Length;
+
+        for(int j = 0; j < charCount; j++){
+            blanks[j] = '_';
+        }
+
+        while(check2 == "1"){
+
+            PrintPass(blanks, charCount);
+
+            System.Console.WriteLine("\nEnter a letter to guess the password");
+            char userInput = char.Parse(Console.ReadLine());//try catch
+
+            CheckInput(pass, userInput, blanks);
+
+            CheckWin(pass, blanks, ref check2);
+        }
+        passHours++;
+
+        System.Console.WriteLine("Enter 1 to play again, enter to quit");
+        string playAgain = Console.ReadLine();
+
+        if(playAgain != "1"){
+            check = "0";
+        }
     }
     return passHours;
     //variable.Length = number of characters in the string
     //char goes in single quotes
+}
+
+static void PrintPass(char[] blanks, int count){
+    System.Console.WriteLine("Password: " );
+
+    for(int i = 0; i < count; i++){
+        System.Console.Write(blanks[i] + " ");
+    }
+    
+}
+
+static void CheckInput(string pass, char userInput, char[] blanks){
+    // char[] chars = new char[pass.Length];
+
+    
+    // for(int j = 0; j <= count; j++){
+    //     chars[j] = pass[j];
+    // }
+    int count2 = 0;
+
+    while(count2 < pass.Length){
+        if(userInput == pass[count2]){
+            blanks[count2] = userInput;
+        }
+        count2++;
+    }
+}
+
+static void CheckWin(string pass, char[] blanks, ref string check2){
+    int count = 0;
+
+    foreach(char x in blanks){
+        if(x == '_'){
+            count++;
+        }
+    }
+
+    if(count == 0){
+        System.Console.WriteLine("You Win!");
+        check2 = "0";
+    }
+}
+
+static string RandomPass(){
+
+    string[] passwords = new string[5];
+    passwords[0] = "secret";
+    passwords[1] = "spy";
+    passwords[2] = "hacker";
+    passwords[3] = "penguin";
+    passwords[4] = "herbert";
+
+    Random rnd = new Random();
+    int num = rnd.Next(5);
+
+    return passwords[num];
 }
 
 //Method responsible for wheel game
