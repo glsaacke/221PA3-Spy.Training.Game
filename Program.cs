@@ -2,14 +2,18 @@
 
 // next: cause pass game to quit when hours reach 3 & make sure hours update in main console
 //***Main
-using System.Globalization;
+string[] names = new string[100];
+int[] hours = new int[100];
+
+LoginLogic(names, hours);
 
 int totalHours = 0;
 int wheelHours = 0;
+int passHours = 0;
 
 string menuInput = RunMenu();
 while(menuInput != "3" && totalHours != 6){
-    totalHours = MenuLogic(menuInput, ref wheelHours);
+    totalHours = MenuLogic(menuInput, ref wheelHours, ref passHours);
     menuInput = RunMenu();
 }
 
@@ -19,6 +23,65 @@ if(totalHours == 6){
 
 //***End Main
 
+static void LoginLogic(string[] names, int[] hours){
+    System.Console.WriteLine("Login: Please enter your first name");
+    string userName = Console.ReadLine();
+
+    int count = GetNamesFromFile(names, hours);
+
+    for(int i = 0; i < count; i++){
+        if(CompareNames(names[i], userName)){
+            System.Console.WriteLine("Welcome back " + userName);
+            string userNum = i;
+        }
+    }
+
+
+
+
+
+}
+
+static int GetNamesFromFile(string[] names, int[] hours){
+    StreamReader inFile = new StreamReader("Login.txt");
+    string line = inFile.ReadLine();
+
+    int count = 0;
+
+    while(line != null){
+        string[] temp = line.Split('#');
+        names[count] = temp[0];
+        hours[count] = int.Parse(temp[1]);
+
+        count++;
+        line = inFile.ReadLine();
+    }
+
+    return count;
+}
+
+static bool CompareNames(string name1, string name2){
+    int result = name1.CompareTo(name2);
+
+      if(result < 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+}
+
+static void FindName(){
+
+}
+
+static void UpdateLogin(){
+
+    
+
+    //make array of lines, then split, change third index 
+}
+
 //Method with menu priming & update reads
 static string RunMenu(){
     System.Console.WriteLine("Hello! Please make a menu selection below:\n1. Password game\n2. Wheel game\n3. Exit");
@@ -27,11 +90,10 @@ static string RunMenu(){
 }
 
 //Method making menu selection
-static int MenuLogic(string x, ref int wheelHours){
-    int passHours = 0;
+static int MenuLogic(string x, ref int wheelHours, ref int passHours){
 
     if(x == "1"){
-        passHours = PasswordGame();
+        passHours = PasswordGame(ref passHours);
     }
     else if (x == "2"){
         wheelHours = WheelGame(ref wheelHours);
@@ -45,10 +107,9 @@ static int MenuLogic(string x, ref int wheelHours){
 }
 
 //Method responsible for password game
-static int PasswordGame(){
+static int PasswordGame(ref int passHours){
     string check = "1";
     string check2 = "1";
-    int passHours = 0;
     char[] blanks = new char[7];
 
     while(check == "1" && passHours < 3){
@@ -66,25 +127,38 @@ static int PasswordGame(){
 
             PrintPass(blanks, charCount);
 
-            System.Console.WriteLine("\nEnter a letter to guess the password");
-            char userInput = char.Parse(Console.ReadLine());//try catch
+            try{
+                System.Console.WriteLine("\nEnter a letter to guess the password");
+                char userInput = char.Parse(Console.ReadLine());//try catch
 
-            CheckInput(pass, userInput, blanks);
+                CheckInput(pass, userInput, blanks);
 
-            CheckWin(pass, blanks, ref check2);
+                CheckWin(pass, blanks, ref check2);
+            }
+            catch{
+                Error();
+            }
         }
         passHours++;
 
-        System.Console.WriteLine("Enter 1 to play again, enter to quit");
-        string playAgain = Console.ReadLine();
+        if(passHours < 3){
+             System.Console.WriteLine("Enter 1 to play again, enter to quit");
+            string playAgain = Console.ReadLine();
+        
 
-        if(playAgain != "1"){
-            check = "0";
+            if(playAgain != "1"){
+                check = "0";
+            }
         }
     }
-    return passHours;
+    
     //variable.Length = number of characters in the string
     //char goes in single quotes
+
+    if(passHours >= 3){
+        System.Console.WriteLine("3 hours reached. Password cracker completed.");
+    }
+    return passHours;
 }
 
 static void PrintPass(char[] blanks, int count){
