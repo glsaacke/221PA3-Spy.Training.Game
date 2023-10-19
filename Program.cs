@@ -24,25 +24,28 @@ if(totalHours == 6){
 //***End Main
 
 static void LoginLogic(string[] names, int[] hours){
+
     System.Console.WriteLine("Login: Please enter your first name");
-    string userName = Console.ReadLine();
+    string userName = Console.ReadLine().ToUpper();
 
     int count = GetNamesFromFile(names, hours);
+    int check = 0;
 
     for(int i = 0; i < count; i++){
         if(CompareNames(names[i], userName)){
             System.Console.WriteLine("Welcome back " + userName);
-            string userNum = i;
+            int userNum = i;
+            check++;
         }
     }
 
-
-
-
-
+    if(check == 0){
+        System.Console.WriteLine("New user: " + userName + "\nUser added to system!");
+    }
 }
 
 static int GetNamesFromFile(string[] names, int[] hours){
+
     StreamReader inFile = new StreamReader("Login.txt");
     string line = inFile.ReadLine();
 
