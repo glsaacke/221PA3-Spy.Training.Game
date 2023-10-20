@@ -1,6 +1,6 @@
 ﻿//C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke
 
-// next: cause pass game to quit when hours reach 3 & make sure hours update in main console
+// next: add colors to win and login mesages
 //***Main
 string[] names = new string[100];
 int[] hours = new int[100];
@@ -64,18 +64,13 @@ static int GetNamesFromFile(string[] names, int[] hours){
 }
 
 static bool CompareNames(string name1, string name2){
-    int result = name1.CompareTo(name2);
 
-      if(result < 0){
-            return false;
-        }
-        else{
+      if(name1 == name2){
             return true;
         }
-}
-
-static void FindName(){
-
+        else{
+            return false;
+        }
 }
 
 static void UpdateLogin(){
@@ -119,6 +114,8 @@ static int PasswordGame(ref int passHours){
         Console.Clear();
         string pass = RandomPass();
         check2 = "1";
+        int check3 = 1;
+        string userInput = "";
 
         int charCount = pass.Length;
 
@@ -129,18 +126,19 @@ static int PasswordGame(ref int passHours){
         while(check2 == "1"){
 
             PrintPass(blanks, charCount);
-
             try{
-                System.Console.WriteLine("\nEnter a letter to guess the password");
-                char userInput = char.Parse(Console.ReadLine());//try catch
-
-                CheckInput(pass, userInput, blanks);
-
-                CheckWin(pass, blanks, ref check2);
+                System.Console.WriteLine("\nEnter a word to guess the password");
+                userInput = Console.ReadLine();//try catch
             }
             catch{
                 Error();
             }
+            
+
+            CheckInput(pass, userInput, blanks);
+
+            CheckWin(pass, blanks, ref check2);
+    
         }
         passHours++;
 
@@ -173,20 +171,19 @@ static void PrintPass(char[] blanks, int count){
     
 }
 
-static void CheckInput(string pass, char userInput, char[] blanks){
+static void CheckInput(string pass, string userInput, char[] blanks){
     // char[] chars = new char[pass.Length];
 
     
     // for(int j = 0; j <= count; j++){
     //     chars[j] = pass[j];
     // }
-    int count2 = 0;
+    int minLength = Math.Min(pass.Length, userInput.Length);
 
-    while(count2 < pass.Length){
-        if(userInput == pass[count2]){
-            blanks[count2] = userInput;
+    for(int i = 0; i < minLength; i++){
+        if(userInput[i] == pass[i]){
+            blanks[i] = userInput[i];
         }
-        count2++;
     }
 }
 

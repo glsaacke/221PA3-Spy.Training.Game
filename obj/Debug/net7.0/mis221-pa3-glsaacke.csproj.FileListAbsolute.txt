@@ -12,3 +12,17 @@ C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-
 C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.pdb
 C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.genruntimeconfig.cache
 C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke\obj\Debug\net7.0\ref\mis221-pa3-glsaacke.dll
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\bin\Debug\net7.0\mis221-pa3-glsaacke.exe
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\bin\Debug\net7.0\mis221-pa3-glsaacke.deps.json
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\bin\Debug\net7.0\mis221-pa3-glsaacke.runtimeconfig.json
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\bin\Debug\net7.0\mis221-pa3-glsaacke.dll
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\bin\Debug\net7.0\mis221-pa3-glsaacke.pdb
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.GeneratedMSBuildEditorConfig.editorconfig
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.AssemblyInfoInputs.cache
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.AssemblyInfo.cs
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.csproj.CoreCompileInputs.cache
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.dll
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\refint\mis221-pa3-glsaacke.dll
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.pdb
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\mis221-pa3-glsaacke.genruntimeconfig.cache
+H:\Coding Materials\GitHub\GitHub_Practice\mis221-pa3-glsaacke\obj\Debug\net7.0\ref\mis221-pa3-glsaacke.dll
