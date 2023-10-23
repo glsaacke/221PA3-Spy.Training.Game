@@ -58,7 +58,7 @@ static int LoginLogic(User[] users, ref int userCount){
         }
     }
     else{
-        AddUser(users, userName, ref userCount);
+        userVal = AddUser(users, userName, ref userCount);
         Console.ForegroundColor = ConsoleColor.Blue;
         System.Console.WriteLine("New user: " + userName + "\nUser added to system!");
         Console.ResetColor();
@@ -109,10 +109,13 @@ static bool CompareNames(string name1, string name2){
 }
 
 //EXTRA: Adds a new user to the system
-static void AddUser(User[] users, string userName, ref int userCount){
+static int AddUser(User[] users, string userName, ref int userCount){
     userCount ++;
+    int userVal = userCount - 1;
     User user = new User(userName, 0, 0, 0);
-    users[userCount - 1] = user;
+    users[userVal] = user;
+
+    return userVal;
 }
 
 //EXTRA: Searches through array to determine if a user exists
@@ -171,6 +174,8 @@ static void PasswordGame(User currentUser){
     string[] words = new string[100];
     int incorrectGuesses = 0;
 
+    RulesMenu();
+
     while(check == "1" && currentUser.GetPassHours() < 3){
         Console.Clear();
         string pass = RandomPass();
@@ -217,12 +222,6 @@ static void PasswordGame(User currentUser){
         }
         incorrectGuesses = 0;
 
-        if(currentUser.GetPassHours() >= 3){
-            Console.ForegroundColor = ConsoleColor.Green;
-            System.Console.WriteLine("3 hours reached. Password cracker completed!");
-            Console.ResetColor();
-        }
-
         if(currentUser.GetPassHours() < 3){
             System.Console.WriteLine("Enter 1 to play again, enter to quit");
             string playAgain = Console.ReadLine();
@@ -232,11 +231,44 @@ static void PasswordGame(User currentUser){
             }
         }
     }
+    if(currentUser.GetPassHours() >= 3){
+        Console.ForegroundColor = ConsoleColor.Green;
+        System.Console.WriteLine("3 hours reached. Password cracker completed!");
+        Console.ResetColor();
+    }
 }
 
 
     //variable.Length = number of characters in the string
     //char goes in single quotes
+
+//Gives user option to read rules
+static void RulesMenu(){
+    System.Console.WriteLine("Welcome to Password Cracker! enter 1 to read rules or 2 to continue");
+    int check = 0;
+    while (check == 0){
+        try{
+            int userInput = int.Parse(Console.ReadLine());
+            if(userInput == 1){
+                System.Console.WriteLine("A series of blanks will appear on the screen representing the secret password.\nYou have 10 tries to guess the word. Letters that match the letters\nin the password will be revealed.");
+                System.Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+                
+                check ++;
+            }
+            else if(userInput == 2){
+                check ++;
+            }
+            else{
+                Error();
+            }
+
+        }
+        catch{
+            Error();
+        }
+    }
+}
 
 //Prints blanks/characters matching user guesses
 static void PrintPass(char[] blanks, int count){
