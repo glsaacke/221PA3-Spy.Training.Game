@@ -16,10 +16,10 @@ int userVal = LoginLogic(users, ref userCount);
 
 User currentUser = users[userVal];
 
-string menuInput = RunMenu();
+string menuInput = RunMenu(); //Priming read
 while(menuInput != "3" && currentUser.GetHours() != 6){
     MenuLogic(menuInput, currentUser);
-    menuInput = RunMenu();
+    menuInput = RunMenu(); //Update read
 }
 
 if(currentUser.GetHours() == 6){
@@ -306,7 +306,6 @@ static void CheckInput(string pass, string userInput, char[] blanks){
 }
 
 //Determines if the user has sucessfully guessed the password
-// Update the CheckWin method to return a boolean
 static bool CheckWin(string pass, char[] blanks){
     int count = 0;
 
@@ -357,7 +356,9 @@ static void WheelGame(User currentUser){
     }
     if (currentUser.GetWheelHours() >= 3){
         currentUser.SetWheelHours(3);
+        Console.ForegroundColor = ConsoleColor.Green;
         System.Console.WriteLine("Your Wheel credit hours are complete. You will be returned to the main menu.");
+        Console.ResetColor();
     }
 }
 
