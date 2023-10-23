@@ -1,66 +1,80 @@
 ﻿//C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke
 
-// next: add colors to win and login mesages
+
 //***Main
+using System.Reflection;
+
 string[] names = new string[100];
 int[] hours = new int[100];
+int[] wheelHours = new int[100];
+int[] passHours = new int[100];
+int userCount = 0;
 
-LoginLogic(names, hours);
-
-int totalHours = 0;
-int wheelHours = 0;
-int passHours = 0;
+int userVal = LoginLogic(names, hours, wheelHours, passHours, ref userCount);
 
 string menuInput = RunMenu();
-while(menuInput != "3" && totalHours != 6){
-    totalHours = MenuLogic(menuInput, ref wheelHours, ref passHours);
+while(menuInput != "3" && hours[userVal] != 6){
+    MenuLogic(menuInput, hours, wheelHours, passHours, ref userVal);
     menuInput = RunMenu();
 }
 
-if(totalHours == 6){
+if(hours[userVal] == 6){
     System.Console.WriteLine("Your credit hours are completed. Thanks for playing!");
 }
 
+UpdateFile(names, hours, ref userCount, hours, wheelHours, passHours, ref userVal);
+
 //***End Main
 
-static void LoginLogic(string[] names, int[] hours){
+static int LoginLogic(string[] names, int[] hours, int[] wheelHours, int[] passHours, ref int userCount){
 
     System.Console.WriteLine("Login: Please enter your first name");
     string userName = Console.ReadLine().ToUpper();
 
-    int count = GetNamesFromFile(names, hours);
+    GetNamesFromFile(names, hours, wheelHours, passHours, ref userCount);
     int check = 0;
 
-    for(int i = 0; i < count; i++){
+    int userVal = SearchUser(names, userName, ref userCount);
+
+    for(int i = 0; i < userCount; i++){
         if(CompareNames(names[i], userName)){
+            Console.ForegroundColor = ConsoleColor.Blue;
             System.Console.WriteLine("Welcome back " + userName);
+            System.Console.WriteLine($"Total hours: {hours[userVal]}");
+            System.Console.WriteLine($"Wheel game hours: {wheelHours[userVal]} Password cracker hours: {passHours[userVal]}");
+            Console.ResetColor();
             int userNum = i;
             check++;
         }
     }
 
     if(check == 0){
+        AddUser(names, hours,userName, ref userCount);
+        Console.ForegroundColor = ConsoleColor.Blue;
         System.Console.WriteLine("New user: " + userName + "\nUser added to system!");
+        Console.ResetColor();
     }
+
+    return userVal;
 }
 
-static int GetNamesFromFile(string[] names, int[] hours){
+static void GetNamesFromFile(string[] names, int[] hours, int[] wheelHours, int[] passHours, ref int userCount){
 
     StreamReader inFile = new StreamReader("Login.txt");
     string line = inFile.ReadLine();
 
-    int count = 0;
 
     while(line != null){
         string[] temp = line.Split('#');
-        names[count] = temp[0];
-        hours[count] = int.Parse(temp[1]);
+        names[userCount] = temp[0];
+        hours[userCount] = int.Parse(temp[1]);
+        wheelHours[userCount] = int.Parse(temp[2]);
+        passHours[userCount] = int.Parse(temp[3]);
 
-        count++;
+        userCount++;
         line = inFile.ReadLine();
     }
-
-    return count;
+    inFile.Close();
 }
 
 static bool CompareNames(string name1, string name2){
@@ -71,6 +85,40 @@ static bool CompareNames(string name1, string name2){
         else{
             return false;
         }
+}
+
+static void AddUser(string[] names, int[] hours, string userName, ref int userCount){
+    userCount ++;
+    names[userCount - 1] = userName;
+    hours[userCount - 1] = 0;
+}
+
+static int SearchUser(string[] names, string userName, ref int userCount){
+    int searchVal = 0;
+
+    for(int i = 0; i < userCount; i ++){
+        if(names[i] == userName){
+            searchVal = i;
+        }
+    }
+    return searchVal;
+}
+// static void AddChangeUser(string[] names, string userName, int count){
+//     var result = SearchUser(names, userName, count);
+//     int searchVal = result.Item1;
+//     bool search = result.Item2;
+
+//     if(search){
+
+//     }
+// }
+
+static void UpdateFile(string[]names, int[] hours, ref int userCount, int[] totalHours, int[] wheelHours, int[] passHours, ref int userVal){
+    StreamWriter outFile = new StreamWriter("Login.txt", false);
+    for(int i = 0; i < userCount; i ++){
+        outFile.WriteLine($"{names[i]}#{hours[i]}#{wheelHours[i]}#{passHours[i]}");
+    }
+    outFile.Close();
 }
 
 static void UpdateLogin(){
@@ -88,29 +136,27 @@ static string RunMenu(){
 }
 
 //Method making menu selection
-static int MenuLogic(string x, ref int wheelHours, ref int passHours){
+static void MenuLogic(string x, int[] hours, int[] wheelHours, int[] passHours, ref int userVal){
 
     if(x == "1"){
-        passHours = PasswordGame(ref passHours);
+        PasswordGame(passHours, ref userVal);
     }
     else if (x == "2"){
-        wheelHours = WheelGame(ref wheelHours);
+        WheelGame(wheelHours, ref userVal);
     }
     else{
        Error();
     }
-    int totalHours = passHours + wheelHours;
-
-    return totalHours;
+    hours[userVal] = passHours[userVal] + wheelHours[userVal];
 }
 
 //Method responsible for password game
-static int PasswordGame(ref int passHours){
+static void PasswordGame(int[] passHours, ref int userVal){
     string check = "1";
     string check2 = "1";
     char[] blanks = new char[7];
 
-    while(check == "1" && passHours < 3){
+    while(check == "1" && passHours[userVal] < 3){
         Console.Clear();
         string pass = RandomPass();
         check2 = "1";
@@ -140,9 +186,9 @@ static int PasswordGame(ref int passHours){
             CheckWin(pass, blanks, ref check2);
     
         }
-        passHours++;
+        passHours[userVal]++;
 
-        if(passHours < 3){
+        if(passHours[userVal] < 3){
              System.Console.WriteLine("Enter 1 to play again, enter to quit");
             string playAgain = Console.ReadLine();
         
@@ -156,10 +202,11 @@ static int PasswordGame(ref int passHours){
     //variable.Length = number of characters in the string
     //char goes in single quotes
 
-    if(passHours >= 3){
-        System.Console.WriteLine("3 hours reached. Password cracker completed.");
+    if(passHours[userVal] >= 3){
+        Console.ForegroundColor = ConsoleColor.Green;
+        System.Console.WriteLine("3 hours reached. Password cracker completed!");
+        Console.ResetColor();
     }
-    return passHours;
 }
 
 static void PrintPass(char[] blanks, int count){
@@ -218,10 +265,10 @@ static string RandomPass(){
 }
 
 //Method responsible for wheel game
-static int WheelGame(ref int wheelHours){
+static void WheelGame(int[] wheelHours, ref int userVal){
     string check = "1";
 
-    while(check == "1" && wheelHours < 3){
+    while(check == "1" && wheelHours[userVal] < 3){
         Console.Clear();
         System.Console.WriteLine("Welcome to the wheel game!\n\nHere are the possible outcomes:\n1. Earn 1 credit hour\n2. Earn 2 credit hours\n3. Lose 2 credit hours\n4. Lose 1 credit hour\n5. Lose all credit hours\n6. Nothing!\n\nPress any key to spin the wheel");
         Console.ReadKey();
@@ -230,22 +277,21 @@ static int WheelGame(ref int wheelHours){
         int number = rnd.Next(5);
 
         System.Console.WriteLine("\nThe wheel landed on...\n");
-        wheelHours = WheelLogic(number, ref wheelHours);
+        WheelLogic(number, wheelHours, ref userVal);
 
-        System.Console.WriteLine("Wheel game credit hours: " + wheelHours + "\n");
+        System.Console.WriteLine("Wheel game credit hours: " + wheelHours[userVal] + "\n");
 
         System.Console.WriteLine("Enter 1 to spin again, enter to quit");
         check = Console.ReadLine();
     }
-    if (wheelHours >= 3){
-        wheelHours = 3;
+    if (wheelHours[userVal] >= 3){
+        wheelHours[userVal] = 3;
         System.Console.WriteLine("Your Wheel credit hours are complete. You will be returned to the main menu.");
     }
-    return wheelHours;
 }
 
 //Method for coding wheel outcomes
-static int WheelLogic(int number, ref int wheelHours){
+static void WheelLogic(int number, int[] wheelHours, ref int userVal){
     Random rnd = new Random();
     int number2 = rnd.Next(2);
 
@@ -253,33 +299,33 @@ static int WheelLogic(int number, ref int wheelHours){
         case 0:
             Console.ForegroundColor = ConsoleColor.Green;
             System.Console.WriteLine("Earn 1 credit hour!");
-            wheelHours += 1;
+            wheelHours[userVal] += 1;
             break;
         case 1:
             if(number2 == 0){
                 Console.ForegroundColor = ConsoleColor.Green;
                 System.Console.WriteLine("Earn 2 credit hours!");
-                wheelHours += 2;
+                wheelHours[userVal] += 2;
             }
             else{
                 Console.ForegroundColor = ConsoleColor.Red;
                 System.Console.WriteLine("Lose 2 credit hours");
-                wheelHours -= 2;
+                wheelHours[userVal] -= 2;
             }
             break;
         case 2:
             Console.ForegroundColor = ConsoleColor.Red;
             System.Console.WriteLine("Lose 1 credit hour!");
-            wheelHours -= 1;
+            wheelHours[userVal] -= 1;
             break;
         case 3:
             Console.ForegroundColor = ConsoleColor.DarkRed;
             System.Console.WriteLine("Lose all credit hours!");
-            if(wheelHours > 0){
-                wheelHours = 0;
+            if(wheelHours[userVal] > 0){
+                wheelHours[userVal] = 0;
             }
             else{
-                wheelHours -= 2;
+                wheelHours[userVal] -= 2;
                 System.Console.WriteLine("(hours -2 since you don't have any to lose)");
             }
             break;
@@ -290,8 +336,6 @@ static int WheelLogic(int number, ref int wheelHours){
     }
     Console.ResetColor();
     System.Console.WriteLine("");
-
-    return wheelHours;
 }
 
 //Method for error message
