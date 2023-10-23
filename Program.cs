@@ -1,7 +1,10 @@
 ﻿//C:\Users\gavin\Documents\Schoolwork\CodingMaterials\Projects\221repo\PA3\mis221-pa3-glsaacke
 
-// next: add colors to win and login mesages
+// next: add colors to win and login mesages | add 10 attempts to password game
 //***Main
+using mis221_pa3_glsaacke;
+using System;
+
 string[] names = new string[100];
 int[] hours = new int[100];
 
@@ -40,6 +43,7 @@ static void LoginLogic(string[] names, int[] hours){
     }
 
     if(check == 0){
+        AddUser(userName);
         System.Console.WriteLine("New user: " + userName + "\nUser added to system!");
     }
 }
@@ -71,6 +75,10 @@ static bool CompareNames(string name1, string name2){
         else{
             return false;
         }
+}
+
+static void AddUser(string userName){
+
 }
 
 static void UpdateLogin(){

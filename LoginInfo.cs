@@ -9,7 +9,6 @@ namespace mis221_pa3_glsaacke
         public LoginInfo(string firstName, string lastName, int hours){
 
             this.firstName = firstName;
-            this.lastName = lastName;
             this.hours = hours;
         }
 
@@ -19,6 +18,12 @@ namespace mis221_pa3_glsaacke
 
         public void SetFirstName(string firstName){
             this.firstName = firstName;
+        }
+        public int GetHours(){
+            return hours;
+        }
+        public void SetHours(){
+            this.hours = hours;
         }
     }
 }
