@@ -3,7 +3,9 @@
 
 //***Main
 
+using System.Data.SqlTypes;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using mis221_pa3_glsaacke;
 
 const int MAX_USERS = 100;
@@ -30,7 +32,7 @@ UpdateFile(users);
 //***End Main
 
 
-//Manages and runs the appropriate login methodology 
+//EXTRA: Manages and runs the appropriate login methodology 
 static int LoginLogic(User[] users, ref int userCount){
 
     System.Console.WriteLine("Login: Please enter your first name");
@@ -65,7 +67,7 @@ static int LoginLogic(User[] users, ref int userCount){
     return userVal;
 }
 
-//Imports user data from .txt file
+//EXTRA: Imports user data from .txt file
 static int GetUsersFromFile(User[] users){
     int userCount = 0;
 
@@ -95,7 +97,7 @@ static int GetUsersFromFile(User[] users){
 }
 
 
-//Compares user input against user data
+//EXTRA: Compares user input against user data
 static bool CompareNames(string name1, string name2){
 
       if(name1 == name2){
@@ -106,14 +108,14 @@ static bool CompareNames(string name1, string name2){
         }
 }
 
-//Adds a new user to the system
+//EXTRA: Adds a new user to the system
 static void AddUser(User[] users, string userName, ref int userCount){
     userCount ++;
     User user = new User(userName, 0, 0, 0);
     users[userCount - 1] = user;
 }
 
-//Searches through array to determine if a user exists
+//EXTRA: Searches through array to determine if a user exists
 static int SearchUser(User[] users, string userName, ref int userCount){
     int check = 0;
 
@@ -126,7 +128,7 @@ static int SearchUser(User[] users, string userName, ref int userCount){
     return check; 
 }
 
-//Overwrites the .txt file with current user information
+//EXTRA: Overwrites the .txt file with current user information
 static void UpdateFile(User[] users){
     StreamWriter outFile = new StreamWriter("Login.txt", false);
     for(int i = 0; i < users.Length; i ++){
@@ -166,13 +168,15 @@ static void PasswordGame(User currentUser){
     string check = "1";
     string check2 = "1";
     char[] blanks = new char[7];
+    string[] words = new string[100];
+    int incorrectGuesses = 0;
 
     while(check == "1" && currentUser.GetPassHours() < 3){
         Console.Clear();
         string pass = RandomPass();
         check2 = "1";
-        int check3 = 1;
         string userInput = "";
+        int wordsGuessed = 0;
 
         int charCount = pass.Length;
 
@@ -181,44 +185,58 @@ static void PasswordGame(User currentUser){
         }
 
         while(check2 == "1"){
-
+            Console.Clear();
+            words[wordsGuessed] = userInput;
             PrintPass(blanks, charCount);
-            try{
-                System.Console.WriteLine("\nEnter a word to guess the password");
-                userInput = Console.ReadLine();//try catch
-            }
-            catch{
-                Error();
-            }
-            
+            PrintGuessedWords(words, wordsGuessed);
+
+            System.Console.WriteLine("\nEnter a word to guess the password");
+            userInput = Console.ReadLine();
 
             CheckInput(pass, userInput, blanks);
 
-            CheckWin(pass, blanks, ref check2);
-    
+            if(CheckWin(pass, blanks)){
+                Console.ForegroundColor = ConsoleColor.Green;
+                System.Console.WriteLine("You Win!");
+                Console.ResetColor();
+                currentUser.IncrementPassHours();
+                check2 = "0";
+            }
+
+            if(userInput != pass){
+                incorrectGuesses++;
+                if (incorrectGuesses >= 10) {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    System.Console.WriteLine("You lose!");
+                    Console.ResetColor();
+                    check2 = "0";
+                }
+            }
+
+            wordsGuessed++;
         }
-        currentUser.IncrementPassHours();
+        incorrectGuesses = 0;
+
+        if(currentUser.GetPassHours() >= 3){
+            Console.ForegroundColor = ConsoleColor.Green;
+            System.Console.WriteLine("3 hours reached. Password cracker completed!");
+            Console.ResetColor();
+        }
 
         if(currentUser.GetPassHours() < 3){
-             System.Console.WriteLine("Enter 1 to play again, enter to quit");
+            System.Console.WriteLine("Enter 1 to play again, enter to quit");
             string playAgain = Console.ReadLine();
-        
-
+            
             if(playAgain != "1"){
                 check = "0";
             }
         }
     }
-    
+}
+
+
     //variable.Length = number of characters in the string
     //char goes in single quotes
-
-    if(currentUser.GetPassHours() >= 3){
-        Console.ForegroundColor = ConsoleColor.Green;
-        System.Console.WriteLine("3 hours reached. Password cracker completed!");
-        Console.ResetColor();
-    }
-}
 
 //Prints blanks/characters matching user guesses
 static void PrintPass(char[] blanks, int count){
@@ -228,6 +246,14 @@ static void PrintPass(char[] blanks, int count){
         System.Console.Write(blanks[i] + " ");
     }
     
+}
+
+//Prints guessed words
+static void PrintGuessedWords(string[] words, int wordsGuessed){
+    System.Console.WriteLine("\nWords guessed:");
+    for(int i = 0; i <= wordsGuessed; i++){
+        Console.Write(words[i] + " ");
+    }
 }
 
 //Determines if user input maches characters in the password
@@ -248,19 +274,17 @@ static void CheckInput(string pass, string userInput, char[] blanks){
 }
 
 //Determines if the user has sucessfully guessed the password
-static void CheckWin(string pass, char[] blanks, ref string check2){
+// Update the CheckWin method to return a boolean
+static bool CheckWin(string pass, char[] blanks){
     int count = 0;
 
-    foreach(char x in blanks){
-        if(x == '_'){
+    foreach (char x in blanks){
+        if (x == '_') {
             count++;
         }
     }
 
-    if(count == 0){
-        System.Console.WriteLine("You Win!");
-        check2 = "0";
-    }
+    return count == 0;
 }
 
 //Sets the password

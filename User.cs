@@ -1,12 +1,15 @@
 namespace mis221_pa3_glsaacke
 {
+    //EXTRAS***
     public class User
     {
+        //Class variables
         private string firstName;
         private int hours;
         private int wheelHours;
         private int passHours;
 
+        //Constructor
         public User(string firstName, int hours, int wheelHours, int passHours){
 
             this.firstName = firstName;
@@ -15,6 +18,7 @@ namespace mis221_pa3_glsaacke
             this.passHours = passHours;
         }
 
+        //Class methods
         public string GetFirstName(){
             return firstName;
         }
@@ -38,7 +42,7 @@ namespace mis221_pa3_glsaacke
         public void SetWheelHours(int inputWheelHours){
             wheelHours = inputWheelHours;
         }
-        public void MathWheelHours(int num){
+        public void MathWheelHours(int num){ //Adds/subtracts the approptiate value
             this.wheelHours = wheelHours += num;
         }
 
